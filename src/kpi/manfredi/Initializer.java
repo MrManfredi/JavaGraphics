@@ -13,52 +13,70 @@ public class Initializer extends Thread{
     @Override
     public void run() {
         JFrame initFrame = new JFrame("Initialization");
-        initFrame.setLayout(new GridLayout(7, 2));
+        initFrame.setLayout(new GridLayout(11, 2));
 //        initFrame.pack();
-        initFrame.setSize(400, 250);
+        initFrame.setSize(300, 350);
         initFrame.setBackground(Color.GRAY);
 
-        // width
-        Label widthLabel = new Label("Width:");
-        initFrame.add(widthLabel);
+        // W1
+        Label W1Label = new Label("W1:");
+        initFrame.add(W1Label);
+        TextField W1TextField = new TextField("20");
+        initFrame.add(W1TextField);
 
-        TextField widthTextField = new TextField("50");
-        initFrame.add(widthTextField);
+        // W2
+        Label W2Label = new Label("W2:");
+        initFrame.add(W2Label);
+        TextField W2TextField = new TextField("50");
+        initFrame.add(W2TextField);
 
-        // the distance to the hole
-        Label distanceToHoleLabel = new Label("Distance to the hole:");
-        initFrame.add(distanceToHoleLabel);
+        // H1
+        Label H1Label = new Label("H1:");
+        initFrame.add(H1Label);
+        TextField H1TextField = new TextField("10");
+        initFrame.add(H1TextField);
 
-        TextField distanceToHoleTextField = new TextField("40");
-        initFrame.add(distanceToHoleTextField);
+        // H2
+        Label H2Label = new Label("H2:");
+        initFrame.add(H2Label);
+        TextField H2TextField = new TextField("20");
+        initFrame.add(H2TextField);
 
-        // height
-        Label heightLabel = new Label("Height:");
-        initFrame.add(heightLabel);
+        // H3
+        Label H3Label = new Label("H3:");
+        initFrame.add(H3Label);
+        TextField H3TextField = new TextField("25");
+        initFrame.add(H3TextField);
 
-        TextField heightTextField = new TextField("15");
-        initFrame.add(heightTextField);
+        // H4
+        Label H4Label = new Label("H4:");
+        initFrame.add(H4Label);
+        TextField H4TextField = new TextField("15");
+        initFrame.add(H4TextField);
 
-        // hole diameter
-        Label holeDiameterLabel = new Label("Diameter of the hole:");
-        initFrame.add(holeDiameterLabel);
+        // H5
+        Label H5Label = new Label("H5:");
+        initFrame.add(H5Label);
+        TextField H5TextField = new TextField("40");
+        initFrame.add(H5TextField);
 
-        TextField holeDiameterTextField = new TextField("10");
-        initFrame.add(holeDiameterTextField);
+        // D1
+        Label D1Label = new Label("D1:");
+        initFrame.add(D1Label);
+        TextField D1TextField = new TextField("10");
+        initFrame.add(D1TextField);
 
-        // radius of rounding (bigger)
-        Label radiusOfRoundingBiggerLabel = new Label("Radius of rounding (bigger):");
-        initFrame.add(radiusOfRoundingBiggerLabel);
+        // R1
+        Label R1Label = new Label("R1:");
+        initFrame.add(R1Label);
+        TextField R1TextField = new TextField("10");
+        initFrame.add(R1TextField);
 
-        TextField radiusOfRoundingBiggerTextField = new TextField("15");
-        initFrame.add(radiusOfRoundingBiggerTextField);
-
-        // radius of rounding (smaller)
-        Label radiusOfRoundingSmallerLabel = new Label("Radius of rounding (smaller):");
-        initFrame.add(radiusOfRoundingSmallerLabel);
-
-        TextField radiusOfRoundingSmallerTextField = new TextField("10");
-        initFrame.add(radiusOfRoundingSmallerTextField);
+        // R2
+        Label R2Label = new Label("R2:");
+        initFrame.add(R2Label);
+        TextField R2TextField = new TextField("15");
+        initFrame.add(R2TextField);
 
         // button
         Button submitButton = new Button("Submit");
@@ -66,12 +84,16 @@ public class Initializer extends Thread{
 
             try {
                 synchronized (figure) {
-                    figure.setWidth(Integer.parseInt(widthTextField.getText()));
-                    figure.setDistanceToHole(Integer.parseInt(distanceToHoleTextField.getText()));
-                    figure.setHeight(Integer.parseInt(heightTextField.getText()));
-                    figure.setHoleDiameter(Integer.parseInt(holeDiameterTextField.getText()));
-                    figure.setRadiusOfRoundingBigger(Integer.parseInt(radiusOfRoundingBiggerTextField.getText()));
-                    figure.setRadiusOfRoundingSmaller(Integer.parseInt(radiusOfRoundingSmallerTextField.getText()));
+                    figure.setW1(Integer.parseInt(W1TextField.getText()));
+                    figure.setW2(Integer.parseInt(W2TextField.getText()));
+                    figure.setH1(Integer.parseInt(H1TextField.getText()));
+                    figure.setH2(Integer.parseInt(H2TextField.getText()));
+                    figure.setH3(Integer.parseInt(H3TextField.getText()));
+                    figure.setH4(Integer.parseInt(H4TextField.getText()));
+                    figure.setH5(Integer.parseInt(H5TextField.getText()));
+                    figure.setD1(Integer.parseInt(D1TextField.getText()));
+                    figure.setR1(Integer.parseInt(R1TextField.getText()));
+                    figure.setR2(Integer.parseInt(R2TextField.getText()));
                     figure.setFine(true);
                     figure.notify();
                 }

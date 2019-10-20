@@ -10,6 +10,8 @@ public class Workplace extends Thread{
     }
     @Override
     public void run() {
+
+
         while (true) {
             synchronized (figure) {
                 try {
@@ -21,7 +23,8 @@ public class Workplace extends Thread{
             JFrame jFrame = new JFrame("Zero");
             jFrame.setSize(1000, 700);
             jFrame.setVisible(true);
-            jFrame.add(new Board(figure));
+            Board board = new Board(figure, jFrame.getSize());
+            jFrame.add(board);
             jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             jFrame.setResizable(false);
         }
