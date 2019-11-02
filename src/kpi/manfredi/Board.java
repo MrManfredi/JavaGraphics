@@ -20,12 +20,14 @@ public class Board extends JPanel {
         double v1 = dimension.getWidth() * 0.8 / figure.getW2();
         double v2 = dimension.getHeight() * 0.8 / (figure.getH4() + figure.getH5() + figure.getR2());
         multiplier = min(v1,v2);
-        this.figure = new Figure(figure, multiplier);
+        this.figure = figure;
+//        this.figure = new Figure(figure, multiplier);
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
         Graphics2D graphics2D = (Graphics2D) g;
         int cellSize = 40;
         drawGrid(graphics2D, cellSize);
@@ -150,5 +152,9 @@ public class Board extends JPanel {
             g.draw(new Line2D.Double(temp, pointsQueue.peek()));
             temp = pointsQueue.remove();
         }
+    }
+
+    public void setFigure(Figure figure) {
+        this.figure = figure;
     }
 }
