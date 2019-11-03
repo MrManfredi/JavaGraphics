@@ -1,8 +1,11 @@
 package kpi.manfredi;
 
-public class Figure {
-    private boolean isFine = false;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+public class Figure implements IFigure{
     private double W1;
     private double W2;
     private double H1;
@@ -15,27 +18,6 @@ public class Figure {
     private double R2;
 
     public Figure() {
-    }
-
-    public Figure(Figure figure, double multiplier) {
-        W1 = figure.getW1() * multiplier;
-        W2 = figure.getW2() * multiplier;
-        H1 = figure.getH1() * multiplier;
-        H2 = figure.getH2() * multiplier;
-        H3 = figure.getH3() * multiplier;
-        H4 = figure.getH4() * multiplier;
-        H5 = figure.getH5() * multiplier;
-        D1 = figure.getD1() * multiplier;
-        R1 = figure.getR1() * multiplier;
-        R2 = figure.getR2() * multiplier;
-    }
-
-    public boolean isFine() {
-        return isFine;
-    }
-
-    public void setFine(boolean fine) {
-        isFine = fine;
     }
 
     public double getW1() {
@@ -116,5 +98,46 @@ public class Figure {
 
     public void setR2(double r2) {
         R2 = r2;
+    }
+
+    private void buildFigure() {
+
+    }
+
+    @Override
+    public List<IContour> getContours() {
+        Point2D.Double A = new Point2D.Double(0.0, 0.0);
+        Point2D.Double B = new Point2D.Double(W2, 0.0);
+        Point2D.Double O0 = new Point2D.Double(W2 / 2.0, 0.0);
+        Point2D.Double C = new Point2D.Double(0.0, H4);
+        Point2D.Double D = new Point2D.Double(B.getX(), C.getY());
+        Point2D.Double E = new Point2D.Double(O0.getX() - R2, C.getY());
+        Point2D.Double F = new Point2D.Double(O0.getX() + R2, C.getY());
+        Point2D.Double G = new Point2D.Double(E.getX(), H5);
+        Point2D.Double H = new Point2D.Double(F.getX(), G.getY());
+        Point2D.Double O1 = new Point2D.Double(O0.getX(), G.getY() - H3);
+//        Point2D.Double I1 = new Point2D.Double(O1.getX() - R1, O1.getY());
+        Point2D.Double I = new Point2D.Double(O1.getX() - W1 / 2, O1.getY());
+//        Point2D.Double J1 = new Point2D.Double(O1.getX() + R1, O1.getY());
+        Point2D.Double J = new Point2D.Double(O1.getX() + W1 / 2, O1.getY());
+        Point2D.Double O2 = new Point2D.Double(O0.getX(), G.getY());
+        Point2D.Double L = new Point2D.Double(I.getX(), E.getY() + H2);
+        Point2D.Double M = new Point2D.Double(J.getX(), L.getY());
+        Point2D.Double K = new Point2D.Double(O0.getX(), L.getY() - H1);
+        Point2D.Double O3 = new Point2D.Double(O0.getX(), O2.getY() + R2);
+
+        List<Point2D> arcO1R1Points = Utils.getCirclePoints(O1, R1, Math.PI, Math.PI * 2); // name structure: figure_center_radius_type
+        Contour contour1 = new Contour(Arrays.asList(I, L, K, M, J));
+//        contour1.addPoints(arcO1R1Points);
+
+        List<Point2D> arcO2R2Points2 = Utils.getCirclePoints(O2, R2, 0, Math.PI);
+        Contour contour2 = new Contour(Arrays.asList(H, F, D, B, A, C, E, G));
+//        contour2.addPoints(arcO2R2Points2);
+
+        List<Point2D> circleO2D1Points = Utils.getCirclePoints(O2, D1 / 2, 0, Math.PI * 2);
+        Contour contour3 = new Contour();
+//        contour3.addPoints(circleO2D1Points);
+
+        return new ArrayList<>(Arrays.asList(contour1, contour2, contour3));
     }
 }

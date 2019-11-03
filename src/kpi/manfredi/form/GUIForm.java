@@ -1,11 +1,10 @@
 package kpi.manfredi.form;
 
-import kpi.manfredi.Board;
+import kpi.manfredi.DrawingPanel;
 import kpi.manfredi.Figure;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 
 public class GUIForm {
     private Figure figure;
@@ -27,6 +26,7 @@ public class GUIForm {
     private JTextField R1TextField;
     private JTextField R2TextField;
     private JButton drawButton;
+    private JMenuBar menuBar;
 
     public JPanel getWindowPanel() {
         return windowPanel;
@@ -37,6 +37,7 @@ public class GUIForm {
         updateMeasurements();
         drawButton.addActionListener(e -> {
             updateMeasurements();
+//            ((DrawingPanel) drawingPanel).drawFigure(figure);
             drawingPanel.repaint();
             drawingPanel.revalidate();
         });
@@ -68,10 +69,27 @@ public class GUIForm {
         frame.setMinimumSize(new Dimension(1000, 700));
         frame.setVisible(true);
 
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu settingsMenu = new JMenu("Settings");
+
+        JMenuItem drawingMenuItem = new JMenuItem("Drawing");
+        settingsMenu.add(drawingMenuItem);
+
+        menuBar.add(settingsMenu);
+        frame.setJMenuBar(menuBar);
+
     }
 
     private void createUIComponents() {
-        drawingPanel = new Board(figure, new Dimension(600, 600));
+        drawingPanel = new DrawingPanel(figure);
         drawingPanel.setMinimumSize(new Dimension(600, 600));
+        ((DrawingPanel) drawingPanel).setGridVisible(true);
+
+        menuBar = new JMenuBar();
+        JMenu settingsMenu = new JMenu("Settings");
+        JMenuItem drawingMenuItem = new JMenuItem("Drawing");
+        settingsMenu.add(drawingMenuItem);
+        menuBar.add(settingsMenu);
     }
 }

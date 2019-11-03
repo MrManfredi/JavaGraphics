@@ -12,9 +12,7 @@ import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class Graph extends JPanel{
 
@@ -28,7 +26,7 @@ public class Graph extends JPanel{
     private Color gridColor = new Color(200, 200, 200, 200);
     private static final Stroke GRAPH_STROKE = new BasicStroke(2f);
     private static int pointWidth = 10;
-    private int numberYDivisions = 6;
+    private int numberYDivisions = 8;
     private List<Double> scores;
     private int padding = 30;
 
@@ -106,9 +104,9 @@ public class Graph extends JPanel{
         g2.drawLine(padding + labelPadding, getHeight() - padding - labelPadding, getWidth() -
                 padding, getHeight() - padding - labelPadding);
 
-        Stroke oldStroke = g2.getStroke();
-        g2.setColor(lineColor);
-        g2.setStroke(GRAPH_STROKE);
+//        Stroke oldStroke = g2.getStroke();
+//        g2.setColor(lineColor);
+//        g2.setStroke(GRAPH_STROKE);
 //        for (int i = 0; i < graphPoints.size() - 1; i++) {
 //            int x1 = graphPoints.get(i).x;
 //            int y1 = graphPoints.get(i).y;
@@ -185,6 +183,15 @@ public class Graph extends JPanel{
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu settingsMenu = new JMenu("Settings");
+
+        JMenuItem drawingMenuItem = new JMenuItem("Drawing");
+        settingsMenu.add(drawingMenuItem);
+
+        menuBar.add(settingsMenu);
+        frame.setJMenuBar(menuBar);
     }
     /*the main method runs createAndShowGui*/
     public static void main(String[] args) {
