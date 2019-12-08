@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -12,10 +11,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class DrawingPanel extends JPanel implements IDrawingPanel{
     private Figure figure;
 
-    private String nameX = "X";
-    private String nameY = "Y";
+    private String axisNameX = "X";
+    private String axisNameY = "Y";
     private int cellSize = 20;
-    private int segmentSize = 40;
+    private int axisSegmentSize = 40;
     private int padding = 40;
     private int labelPadding = 20;
     private boolean isGridVisible = false;
@@ -28,31 +27,34 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
+        drawBackground(graphics2D);
         if (isGridVisible) {
             drawGrid(graphics2D);
         }
-//        drawAxis(graphics2D);
+        drawAxis(graphics2D);
         drawFigure(graphics2D);
     }
 
+    private void drawBackground(Graphics2D g) {
+        g.setColor(Color.WHITE);
+        g.fillRect(getFullPadding(), getFullPadding(), getWorkspaceWidth(), getWorkspaceHeight());
+    }
+
     private void drawGrid(Graphics2D g) {
-        Stroke baseStroke = g.getStroke();
-        Paint basePaint = g.getPaint();
         g.setStroke(new BasicStroke(1));
         g.setPaint(Color.GRAY);
 
         int fullPadding = getFullPadding();
 
+        // parallel to the X axis
         for (int y = fullPadding; y <= fullPadding + getWorkspaceHeight(); y+= cellSize) {
             g.drawLine(fullPadding, y, fullPadding + getWorkspaceWidth(), y);
         }
 
+        // parallel to the Y axis
         for (int x = fullPadding; x <= fullPadding + getWorkspaceWidth(); x+= cellSize) {
             g.drawLine(x, fullPadding, x, fullPadding + getWorkspaceHeight());
         }
-
-        g.setStroke(baseStroke);
-        g.setPaint(basePaint);
     }
 
     private int getWorkspaceHeight() {
@@ -66,22 +68,60 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     }
 
     private void drawAxis(Graphics2D g) {
-        Stroke baseStroke = g.getStroke();
-        Paint basePaint = g.getPaint();
         g.setStroke(new BasicStroke(2));
-        g.setFont(new Font("Serif", Font.PLAIN, cellSize / 2));
         g.setPaint(Color.BLACK);
+        g.setFont(new Font("Serif", Font.PLAIN, axisSegmentSize / 2));
 
         int fullPadding = getFullPadding();
+
         // axis
         g.drawLine(fullPadding, fullPadding - 1, fullPadding + getWorkspaceWidth(), fullPadding - 1);      // X
         g.drawLine(fullPadding - 1, fullPadding, fullPadding - 1, fullPadding + getWorkspaceHeight());     // Y
 
+        int serifLength = 5;
+        int indentationFromSerif = 2;
+
+        // serifs on the X axis
+        for (int x = fullPadding; x <= fullPadding + getWorkspaceWidth(); x+= axisSegmentSize) {
+            g.drawLine(x, fullPadding, x, fullPadding - serifLength);
+        }
+
+        // serifs on the Y axis
+        for (int y = fullPadding; y <= fullPadding + getWorkspaceHeight(); y+= axisSegmentSize) {
+            g.drawLine(fullPadding, y, fullPadding - serifLength, y);
+        }
+
         // numbering
-        g.drawString("O", cellSize * 0.6F, cellSize * 0.8F);
-//        g.drawString("" + (cellSize * multiplier), cellSize * 1.6F, cellSize * 0.8F);
-        g.drawString("1", cellSize * 1.6F, cellSize * 0.8F);
-        g.drawString("1", cellSize * 0.6F, cellSize * 1.8F);
+        FontMetrics metrics = g.getFontMetrics();
+        String origin = "O";
+        int originWidth = metrics.stringWidth(origin);
+        g.drawString(origin, fullPadding - serifLength - originWidth, fullPadding - serifLength); // O
+
+        // dimensions on the X axis
+        for (int x = fullPadding + axisSegmentSize; x <= fullPadding + getWorkspaceWidth() - axisSegmentSize; x+= axisSegmentSize) {
+            String label = String.valueOf(x - fullPadding);
+            int labelWidth = metrics.stringWidth(label);
+            g.drawString(label , x - labelWidth / 2, fullPadding - serifLength - indentationFromSerif);
+        }
+
+        // dimensions on the Y axis
+        for (int y = fullPadding + axisSegmentSize; y <= fullPadding + getWorkspaceHeight() - axisSegmentSize; y+= axisSegmentSize) {
+            String label = String.valueOf(y - fullPadding);
+            int labelWidth = metrics.stringWidth(label);
+            g.drawString(label, fullPadding - labelWidth - serifLength - indentationFromSerif, y); //  + g.getFont().getSize() / 2);
+        }
+
+        // axis name X
+        int axisNameXWidth = metrics.stringWidth(axisNameX);
+        g.drawString(axisNameX ,
+                fullPadding + getWorkspaceWidth() - (getWorkspaceWidth() % axisSegmentSize) - axisNameXWidth / 2,
+                fullPadding - serifLength - indentationFromSerif);
+
+        // axis name Y
+        int axisNameYWidth = metrics.stringWidth(axisNameY);
+        g.drawString(axisNameY,
+                fullPadding - axisNameYWidth - serifLength - indentationFromSerif,
+                fullPadding + getWorkspaceHeight() - (getWorkspaceHeight() % axisSegmentSize));
 
 //        // x arrow
 //        g.drawLine(getWidth(), cellSize, getWidth() - cellSize / 2, (int) (cellSize * 0.66));
@@ -90,10 +130,6 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
 //        // y arrow
 //        g.drawLine(cellSize, getHeight(), (int) (cellSize * 0.66), getHeight() - cellSize / 2);
 //        g.drawLine(cellSize, getHeight(), (int) (cellSize * 1.33), getHeight() - cellSize / 2);
-
-
-        g.setStroke(baseStroke);
-        g.setPaint(basePaint);
     }
 
     private void drawContour(Graphics2D g, IContour contour) {
@@ -126,8 +162,6 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     }
 
     private void drawFigure(Graphics2D g) {
-        Stroke baseStroke = g.getStroke();
-        Paint basePaint = g.getPaint();
         g.setStroke(new BasicStroke(3));
         g.setPaint(Color.RED);
 
@@ -135,17 +169,13 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         for (IContour contour : contours) {
             drawContour(g, contour);
         }
-
-        g.setStroke(baseStroke);
-        g.setPaint(basePaint);
     }
-
 
     @Override
     public void setAxis(String nameX, String nameY, int segmentSize) {
-        this.nameX = nameX;
-        this.nameY = nameY;
-        this.segmentSize = segmentSize;
+        this.axisNameX = nameX;
+        this.axisNameY = nameY;
+        this.axisSegmentSize = segmentSize;
     }
 
     @Override
