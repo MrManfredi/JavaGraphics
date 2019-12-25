@@ -105,7 +105,7 @@ public class Figure implements IFigure{
     }
 
     @Override
-    public List<IContour> getContours() {
+    public List<List<Point2D>> getContours() {
         Point2D.Double A = new Point2D.Double(0.0, 0.0);
         Point2D.Double B = new Point2D.Double(W2, 0.0);
         Point2D.Double O0 = new Point2D.Double(W2 / 2.0, 0.0);
@@ -127,16 +127,17 @@ public class Figure implements IFigure{
         Point2D.Double O3 = new Point2D.Double(O0.getX(), O2.getY() + R2);
 
         List<Point2D> arcO1R1Points = Utils.getCirclePoints(O1, R1, Math.PI, Math.PI * 2); // name structure: figure_center_radius_type
-        Contour contour1 = new Contour(Arrays.asList(I, L, K, M, J));
-//        contour1.addPoints(arcO1R1Points);
+        List<Point2D> contour1 = new ArrayList<>();
+        contour1.addAll(Arrays.asList(J, M, K, L, I));
+        contour1.addAll(arcO1R1Points);
 
         List<Point2D> arcO2R2Points2 = Utils.getCirclePoints(O2, R2, 0, Math.PI);
-        Contour contour2 = new Contour(Arrays.asList(H, F, D, B, A, C, E, G));
-//        contour2.addPoints(arcO2R2Points2);
+        List<Point2D> contour2 = new ArrayList<>();
+        contour2.addAll(Arrays.asList(G, E, C, A, B, D, F, H));
+        contour2.addAll(arcO2R2Points2);
 
         List<Point2D> circleO2D1Points = Utils.getCirclePoints(O2, D1 / 2, 0, Math.PI * 2);
-        Contour contour3 = new Contour();
-//        contour3.addPoints(circleO2D1Points);
+        List<Point2D> contour3 = new ArrayList<>(circleO2D1Points);
 
         return new ArrayList<>(Arrays.asList(contour1, contour2, contour3));
     }

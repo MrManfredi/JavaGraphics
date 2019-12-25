@@ -132,14 +132,13 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
 //        g.drawLine(cellSize, getHeight(), (int) (cellSize * 1.33), getHeight() - cellSize / 2);
     }
 
-    private void drawContour(Graphics2D g, IContour contour) {
-        List<Point2D> points = contour.getPoints();
-        if (points == null || points.isEmpty()) {
+    private void drawContour(Graphics2D g, List<Point2D> contour) {
+        if (contour == null || contour.isEmpty()) {
             return;
         }
 
         Queue<Point2D> pointsQueue = new LinkedBlockingQueue<>();
-        for (Point2D point2D : points) {
+        for (Point2D point2D : contour) {
             Point2D temp = new Point2D.Double(point2D.getX() + getFullPadding(), point2D.getY() + getFullPadding());
             pointsQueue.add(temp);
         }
@@ -165,8 +164,7 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         g.setStroke(new BasicStroke(3));
         g.setPaint(Color.RED);
 
-        List<IContour> contours = figure.getContours();
-        for (IContour contour : contours) {
+        for (List<Point2D> contour : figure.getContours()) {
             drawContour(g, contour);
         }
     }
