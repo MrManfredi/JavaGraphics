@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Figure implements IFigure{
+    private double x;
+    private double y;
+
     private double W1;
     private double W2;
     private double H1;
@@ -18,6 +21,13 @@ public class Figure implements IFigure{
     private double R2;
 
     public Figure() {
+        x = 0.0;
+        y = 0.0;
+    }
+
+    public Figure(double x, double y) {
+        this.x = x;
+        this.y = y;
     }
 
     public double getW1() {
@@ -100,20 +110,16 @@ public class Figure implements IFigure{
         R2 = r2;
     }
 
-    private void buildFigure() {
-
-    }
-
     @Override
     public List<List<Point2D>> getContours() {
-        Point2D.Double A = new Point2D.Double(0.0, 0.0);
-        Point2D.Double B = new Point2D.Double(W2, 0.0);
-        Point2D.Double O0 = new Point2D.Double(W2 / 2.0, 0.0);
-        Point2D.Double C = new Point2D.Double(0.0, H4);
+        Point2D.Double A = new Point2D.Double(x, y);
+        Point2D.Double B = new Point2D.Double(W2 + x, y);
+        Point2D.Double O0 = new Point2D.Double(W2 / 2.0 + x, y);
+        Point2D.Double C = new Point2D.Double(x, H4 + y);
         Point2D.Double D = new Point2D.Double(B.getX(), C.getY());
         Point2D.Double E = new Point2D.Double(O0.getX() - R2, C.getY());
         Point2D.Double F = new Point2D.Double(O0.getX() + R2, C.getY());
-        Point2D.Double G = new Point2D.Double(E.getX(), H5);
+        Point2D.Double G = new Point2D.Double(E.getX(), H5 + y);
         Point2D.Double H = new Point2D.Double(F.getX(), G.getY());
         Point2D.Double O1 = new Point2D.Double(O0.getX(), G.getY() - H3);
 //        Point2D.Double I1 = new Point2D.Double(O1.getX() - R1, O1.getY());
@@ -140,5 +146,21 @@ public class Figure implements IFigure{
         List<Point2D> contour3 = new ArrayList<>(circleO2D1Points);
 
         return new ArrayList<>(Arrays.asList(contour1, contour2, contour3));
+    }
+
+    public void moveUp(double num) {
+        y -= num;
+    }
+
+    public void moveDown(double num) {
+        y += num;
+    }
+
+    public void moveRight(double num) {
+        x += num;
+    }
+
+    public void moveLeft(double num) {
+        x -= num;
     }
 }

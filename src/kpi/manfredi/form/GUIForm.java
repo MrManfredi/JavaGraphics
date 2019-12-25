@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GUIForm {
-    private Figure figure;
+    private volatile Figure figure;
 //    private Dimension DRAWING_PANEL_DIMENSION = new Dimension(600, 600);
 
     private JPanel windowPanel;
@@ -26,21 +26,29 @@ public class GUIForm {
     private JTextField R1TextField;
     private JTextField R2TextField;
     private JButton drawButton;
-    private JMenuBar menuBar;
+    private JMenu actionsMenu;
+    private JMenu helpMenu;
 
     public JPanel getWindowPanel() {
         return windowPanel;
+    }
+
+    public Figure getFigure() {
+        return figure;
     }
 
     public GUIForm(Figure figure) {
         this.figure = figure;
         updateMeasurements();
         drawButton.addActionListener(e -> {
-            updateMeasurements();
-//            ((DrawingPanel) drawingPanel).drawFigure(figure);
-            drawingPanel.repaint();
-            drawingPanel.revalidate();
+            repaintFigure();
         });
+    }
+
+    public void repaintFigure() {
+        updateMeasurements();
+        drawingPanel.repaint();
+        drawingPanel.revalidate();
     }
 
     private void updateMeasurements() {
@@ -68,17 +76,6 @@ public class GUIForm {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setMinimumSize(new Dimension(1000, 700));
         frame.setVisible(true);
-
-        JMenuBar menuBar = new JMenuBar();
-
-        JMenu settingsMenu = new JMenu("Settings");
-
-        JMenuItem drawingMenuItem = new JMenuItem("Drawing");
-        settingsMenu.add(drawingMenuItem);
-
-        menuBar.add(settingsMenu);
-        frame.setJMenuBar(menuBar);
-
     }
 
     private void createUIComponents() {
@@ -86,10 +83,28 @@ public class GUIForm {
         drawingPanel.setMinimumSize(new Dimension(600, 600));
         ((DrawingPanel) drawingPanel).setGridVisible(true);
 
-        menuBar = new JMenuBar();
-        JMenu settingsMenu = new JMenu("Settings");
-        JMenuItem drawingMenuItem = new JMenuItem("Drawing");
-        settingsMenu.add(drawingMenuItem);
-        menuBar.add(settingsMenu);
+        //
+        // menu begin
+        //
+        actionsMenu = new JMenu("Actions");
+        JMenuItem moveMI = new JMenuItem("Move");
+        actionsMenu.add(moveMI);
+        moveMI.addActionListener(e -> {
+            JFrame frame = new JFrame("Nazarchuk D.K.");
+            MoveForm moveForm = new MoveForm(this);
+            frame.setContentPane(moveForm.getContent());
+            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            frame.setMinimumSize(new Dimension(250, 250));
+            frame.setVisible(true);
+        });
+        JMenuItem transformMI = new JMenuItem("Transform");
+        actionsMenu.add(transformMI);
+
+        helpMenu = new JMenu("Help");
+        JMenuItem helpMI = new JMenuItem("Help");
+        helpMenu.add(helpMI);
+        //
+        // menu end
+        //
     }
 }
