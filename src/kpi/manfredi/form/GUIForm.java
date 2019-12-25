@@ -41,12 +41,12 @@ public class GUIForm {
         this.figure = figure;
         updateMeasurements();
         drawButton.addActionListener(e -> {
+            updateMeasurements();
             repaintFigure();
         });
     }
 
     public void repaintFigure() {
-        updateMeasurements();
         drawingPanel.repaint();
         drawingPanel.revalidate();
     }
@@ -93,6 +93,16 @@ public class GUIForm {
             JFrame frame = new JFrame("Nazarchuk D.K.");
             MoveForm moveForm = new MoveForm(this);
             frame.setContentPane(moveForm.getContent());
+            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            frame.setMinimumSize(new Dimension(250, 250));
+            frame.setVisible(true);
+        });
+        JMenuItem rotateMI = new JMenuItem("Rotate");
+        actionsMenu.add(rotateMI);
+        rotateMI.addActionListener(e -> {
+            JFrame frame = new JFrame("Nazarchuk D.K.");
+            RotateForm rotateForm = new RotateForm(this);
+            frame.setContentPane(rotateForm.getContent());
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             frame.setMinimumSize(new Dimension(250, 250));
             frame.setVisible(true);
