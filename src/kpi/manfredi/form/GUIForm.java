@@ -39,9 +39,9 @@ public class GUIForm {
 
     public GUIForm(Figure figure) {
         this.figure = figure;
-        updateMeasurements();
+        setMeasurements();
         drawButton.addActionListener(e -> {
-            updateMeasurements();
+            setMeasurements();
             repaintFigure();
         });
     }
@@ -51,21 +51,34 @@ public class GUIForm {
         drawingPanel.revalidate();
     }
 
-    private void updateMeasurements() {
+    private void setMeasurements() {
         try {
-            figure.setW1(Integer.parseInt(W1TextField.getText()));
-            figure.setW2(Integer.parseInt(W2TextField.getText()));
-            figure.setH1(Integer.parseInt(H1TextField.getText()));
-            figure.setH2(Integer.parseInt(H2TextField.getText()));
-            figure.setH3(Integer.parseInt(H3TextField.getText()));
-            figure.setH4(Integer.parseInt(H4TextField.getText()));
-            figure.setH5(Integer.parseInt(H5TextField.getText()));
-            figure.setD1(Integer.parseInt(D1TextField.getText()));
-            figure.setR1(Integer.parseInt(R1TextField.getText()));
-            figure.setR2(Integer.parseInt(R2TextField.getText()));
+            figure.setW1(Double.parseDouble(W1TextField.getText()));
+            figure.setW2(Double.parseDouble(W2TextField.getText()));
+            figure.setH1(Double.parseDouble(H1TextField.getText()));
+            figure.setH2(Double.parseDouble(H2TextField.getText()));
+            figure.setH3(Double.parseDouble(H3TextField.getText()));
+            figure.setH4(Double.parseDouble(H4TextField.getText()));
+            figure.setH5(Double.parseDouble(H5TextField.getText()));
+            figure.setD1(Double.parseDouble(D1TextField.getText()));
+            figure.setR1(Double.parseDouble(R1TextField.getText()));
+            figure.setR2(Double.parseDouble(R2TextField.getText()));
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(null, "You must to enter only the numbers!");
         }
+    }
+
+    public void updateMeasurements() {
+        W1TextField.setText(String.valueOf(figure.getW1()));
+        W2TextField.setText(String.valueOf(figure.getW2()));
+        H1TextField.setText(String.valueOf(figure.getH1()));
+        H2TextField.setText(String.valueOf(figure.getH2()));
+        H3TextField.setText(String.valueOf(figure.getH3()));
+        H4TextField.setText(String.valueOf(figure.getH4()));
+        H5TextField.setText(String.valueOf(figure.getH5()));
+        D1TextField.setText(String.valueOf(figure.getD1()));
+        R1TextField.setText(String.valueOf(figure.getR1()));
+        R2TextField.setText(String.valueOf(figure.getR2()));
     }
 
     public static void main(String[] args) {
@@ -82,39 +95,50 @@ public class GUIForm {
         drawingPanel = new DrawingPanel(figure);
         drawingPanel.setMinimumSize(new Dimension(600, 600));
         ((DrawingPanel) drawingPanel).setGridVisible(true);
+        createMenu();
+    }
 
-        //
-        // menu begin
-        //
+    private void createMenu() {
         actionsMenu = new JMenu("Actions");
+
         JMenuItem moveMI = new JMenuItem("Move");
         actionsMenu.add(moveMI);
         moveMI.addActionListener(e -> {
-            JFrame frame = new JFrame("Nazarchuk D.K.");
+            JFrame frame = new JFrame("Move");
             MoveForm moveForm = new MoveForm(this);
             frame.setContentPane(moveForm.getContent());
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             frame.setMinimumSize(new Dimension(250, 250));
             frame.setVisible(true);
         });
+
         JMenuItem rotateMI = new JMenuItem("Rotate");
         actionsMenu.add(rotateMI);
         rotateMI.addActionListener(e -> {
-            JFrame frame = new JFrame("Nazarchuk D.K.");
+            JFrame frame = new JFrame("Rotate");
             RotateForm rotateForm = new RotateForm(this);
             frame.setContentPane(rotateForm.getContent());
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             frame.setMinimumSize(new Dimension(250, 250));
             frame.setVisible(true);
         });
+
+        JMenuItem scaleMI = new JMenuItem("Scale");
+        actionsMenu.add(scaleMI);
+        scaleMI.addActionListener(e -> {
+            JFrame frame = new JFrame("Scale");
+            ScaleForm scaleForm = new ScaleForm(this);
+            frame.setContentPane(scaleForm.getContent());
+            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            frame.setMinimumSize(new Dimension(250, 100));
+            frame.setVisible(true);
+        });
+
         JMenuItem transformMI = new JMenuItem("Transform");
         actionsMenu.add(transformMI);
 
         helpMenu = new JMenu("Help");
         JMenuItem helpMI = new JMenuItem("Help");
         helpMenu.add(helpMI);
-        //
-        // menu end
-        //
     }
 }

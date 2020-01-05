@@ -249,4 +249,28 @@ public class Figure implements IFigure{
 
         isRotated = true;
     }
+
+    public void toScale(double scalingFactor) {
+        for (List<Point2D> contour : contours) {
+            for (Point2D point : contour) {
+                double x = point.getX();
+                double y = point.getY();
+
+                double newX = x * scalingFactor;
+                double newY = y * scalingFactor;
+
+                point.setLocation(newX, newY);
+            }
+        }
+        W1 *= scalingFactor;
+        W2 *= scalingFactor;
+        H1 *= scalingFactor;
+        H2 *= scalingFactor;
+        H3 *= scalingFactor;
+        H4 *= scalingFactor;
+        H5 *= scalingFactor;
+        D1 *= scalingFactor;
+        R1 *= scalingFactor;
+        R2 *= scalingFactor;
+    }
 }
