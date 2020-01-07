@@ -33,6 +33,10 @@ public class GUIForm {
         return windowPanel;
     }
 
+    public JPanel getDrawingPanel() {
+        return drawingPanel;
+    }
+
     public Figure getFigure() {
         return figure;
     }
@@ -132,6 +136,18 @@ public class GUIForm {
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             frame.setMinimumSize(new Dimension(250, 100));
             frame.setVisible(true);
+        });
+
+        JMenuItem auxiliaryLinesMI = new JMenuItem("Auxiliary lines");
+        actionsMenu.add(auxiliaryLinesMI);
+        auxiliaryLinesMI.addActionListener(e -> {
+            JFrame frame = new JFrame("Auxiliary lines");
+            AuxiliaryLinesForm auxiliaryLinesForm = new AuxiliaryLinesForm(this);
+            frame.setContentPane(auxiliaryLinesForm.getContent());
+            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            frame.setMinimumSize(new Dimension(400, 150));
+            frame.setVisible(true);
+            frame.setAlwaysOnTop(true);
         });
 
         JMenuItem transformMI = new JMenuItem("Transform");

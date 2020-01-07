@@ -273,4 +273,39 @@ public class Figure implements IFigure{
         R1 *= scalingFactor;
         R2 *= scalingFactor;
     }
+
+    public Point2D getPoint(Point2D point2D) {
+        int district = 5;
+        for (List<Point2D> contour : contours) {
+            for (Point2D point : contour) {
+                if (point.getX() - district < point2D.getX()
+                        && point.getX() + district > point2D.getX()
+                        && point.getY() - district < point2D.getY()
+                        && point.getY() + district > point2D.getY()) {
+                    return point;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Point2D getNextPoint(Point2D point2D) {
+        Point2D firstPoint = null;
+        boolean isFinded = false;
+        for (List<Point2D> contour : contours) {
+            for (Point2D point : contour) {
+                if (isFinded) {
+                    return point;
+                }
+                if (firstPoint == null) firstPoint = point;
+                if (point == point2D){
+                    isFinded = true;
+                }
+            }
+            if (isFinded) {
+                return firstPoint;
+            }
+        }
+        return null;
+    }
 }
