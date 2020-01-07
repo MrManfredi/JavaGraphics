@@ -58,20 +58,23 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         Point2D vector = new Point2D.Double(
                 nextPoint.getX() - auxiliaryPoint.getX(),
                 nextPoint.getY() - auxiliaryPoint.getY());
+        drawLineByVector(g, vector);
+    }
 
-        Point2D tangentStartPoint, tangentEndPoint;
+    private void drawLineByVector(Graphics2D g, Point2D vector) {
+        Point2D startPoint, endPoint;
         if (Math.abs(vector.getX()) < Math.abs(vector.getY())) {
-            tangentStartPoint = getPointByY(0.0, vector);
-            tangentEndPoint = getPointByY(getWorkspaceHeight(), vector);
+            startPoint = getPointByY(0.0, vector);
+            endPoint = getPointByY(getWorkspaceHeight(), vector);
         } else {
-            tangentStartPoint = getPointByX(0.0, vector);
-            tangentEndPoint = getPointByX(getWorkspaceWidth(), vector);
+            startPoint = getPointByX(0.0, vector);
+            endPoint = getPointByX(getWorkspaceWidth(), vector);
         }
 
-        tangentStartPoint = adaptPoint(tangentStartPoint, vector);
-        tangentEndPoint = adaptPoint(tangentEndPoint, vector);
+        startPoint = adaptPoint(startPoint, vector);
+        endPoint = adaptPoint(endPoint, vector);
 
-        g.draw(new Line2D.Double(tangentStartPoint, tangentEndPoint));
+        g.draw(new Line2D.Double(startPoint, endPoint));
     }
 
     private Point2D getPointByX(double x, Point2D vector) {
@@ -100,7 +103,26 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     }
 
     private void drawPerpendicular(Graphics2D g) {
+        g.setColor(Color.BLUE);
+        Point2D nextPoint = figure.getNextPoint(auxiliaryPoint);
+        if (nextPoint == null) {
+            System.out.println("nextPoint is null");
+            auxiliaryPoint = null;
+            return;
+        }
+        Point2D anotherPoint = getPerpendicularBasePoint(auxiliaryPoint, nextPoint);
+        Point2D vector = new Point2D.Double(
+                anotherPoint.getX() - auxiliaryPoint.getX(),
+                anotherPoint.getY() - auxiliaryPoint.getY());
+        drawLineByVector(g, vector);
+    }
 
+    private Point2D getPerpendicularBasePoint(Point2D basePoint, Point2D point1) {
+        double x0 = basePoint.getX();
+        double y0 = basePoint.getY();
+        double x2 = x0 + 10;
+        double y2 = ((point1.getX() - x0) * (x2 - x0)) / (y0 - point1.getY()) + y0;
+        return new Point2D.Double(x2, y2);
     }
 
     private void drawBackground(Graphics2D g) {

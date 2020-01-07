@@ -14,7 +14,7 @@ public abstract class Utils {
             double yLocation = radius * Math.sin(currentAngle) + center.getY();
             temp.setLocation(xLocation, yLocation);
             circlePoints.add(temp);
-            currentAngle+= Math.PI / 20;
+            currentAngle += Math.PI / 80;
         }
         return circlePoints;
     }
