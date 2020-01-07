@@ -19,7 +19,7 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     private int labelPadding = 20;
     private boolean isGridVisible = false;
 
-    private Point2D basisAuxiliaryLinesPoint = null;
+    private Point2D auxiliaryPoint = null;
     private boolean tangentLineCheckBox = false;
     private boolean perpendicularCheckBox = false;
 
@@ -37,7 +37,7 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         }
         drawAxis(graphics2D);
         drawFigure(graphics2D);
-        if (basisAuxiliaryLinesPoint != null) {
+        if (auxiliaryPoint != null) {
             if (tangentLineCheckBox) {
                 drawTangentLine(graphics2D);
             }
@@ -49,30 +49,54 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
 
     private void drawTangentLine(Graphics2D g) {
         g.setColor(Color.BLUE);
-        Point2D nextPoint = figure.getNextPoint(basisAuxiliaryLinesPoint);
+        Point2D nextPoint = figure.getNextPoint(auxiliaryPoint);
         if (nextPoint == null) {
             System.out.println("nextPoint is null");
-            basisAuxiliaryLinesPoint = null;
+            auxiliaryPoint = null;
             return;
         }
-        Point2D.Double shift = new Point2D.Double(nextPoint.getX() - basisAuxiliaryLinesPoint.getX(),
-                nextPoint.getY() - basisAuxiliaryLinesPoint.getY());
-        int k = 300;
-        Point2D.Double tangentStartPoint = new Point2D.Double(basisAuxiliaryLinesPoint.getX() - k * shift.getX() + getFullPadding(),
-                basisAuxiliaryLinesPoint.getY() - k * shift.getY() + getFullPadding());
-        Point2D.Double tangentEndPoint = new Point2D.Double(basisAuxiliaryLinesPoint.getX() + k * shift.getX() + getFullPadding(),
-                basisAuxiliaryLinesPoint.getY() + k * shift.getY() + getFullPadding());
+        Point2D vector = new Point2D.Double(
+                nextPoint.getX() - auxiliaryPoint.getX(),
+                nextPoint.getY() - auxiliaryPoint.getY());
+
+        Point2D tangentStartPoint, tangentEndPoint;
+        if (Math.abs(vector.getX()) < Math.abs(vector.getY())) {
+            tangentStartPoint = getPointByY(0.0, vector);
+            tangentEndPoint = getPointByY(getWorkspaceHeight(), vector);
+        } else {
+            tangentStartPoint = getPointByX(0.0, vector);
+            tangentEndPoint = getPointByX(getWorkspaceWidth(), vector);
+        }
+
+        tangentStartPoint = adaptPoint(tangentStartPoint, vector);
+        tangentEndPoint = adaptPoint(tangentEndPoint, vector);
+
         g.draw(new Line2D.Double(tangentStartPoint, tangentEndPoint));
     }
 
-    private void drawSegment(Graphics2D g) {
-        g.setColor(Color.BLUE);
-        Point2D nextPoint = figure.getNextPoint(basisAuxiliaryLinesPoint);
-        g.draw(new Line2D.Double(
-                basisAuxiliaryLinesPoint.getX() + getFullPadding(),
-                basisAuxiliaryLinesPoint.getY() + getFullPadding(),
-                nextPoint.getX() + getFullPadding(),
-                nextPoint.getY() + getFullPadding()));
+    private Point2D getPointByX(double x, Point2D vector) {
+        double y = Utils.calculateY(auxiliaryPoint, vector, x);
+        return new Point2D.Double(x + getFullPadding(), y + getFullPadding());
+    }
+
+    private Point2D getPointByY(double y, Point2D vector) {
+        double x = Utils.calculateX(auxiliaryPoint, vector, y);
+        return new Point2D.Double(x + getFullPadding(), y + getFullPadding());
+    }
+
+    private Point2D adaptPoint(Point2D point, Point2D vector) {
+        int fullPadding = getFullPadding();
+        if (point.getX() < fullPadding) {
+            point = getPointByX(0.0 , vector);
+        } else if (point.getX() > getWorkspaceWidth() + fullPadding) {
+            point = getPointByX(getWorkspaceWidth(), vector);
+        }
+        if (point.getY() < fullPadding) {
+            point = getPointByY(0.0, vector);
+        } else if (point.getY() > getWorkspaceHeight() + fullPadding) {
+            point = getPointByY(getWorkspaceHeight(), vector);
+        }
+        return point;
     }
 
     private void drawPerpendicular(Graphics2D g) {
@@ -230,8 +254,8 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         this.cellSize = cellSize;
     }
 
-    public void setBasisAuxiliaryLinesPoint(Point2D basisAuxiliaryLinesPoint) {
-        this.basisAuxiliaryLinesPoint = basisAuxiliaryLinesPoint;
+    public void setAuxiliaryPoint(Point2D auxiliaryPoint) {
+        this.auxiliaryPoint = auxiliaryPoint;
     }
 
     public void setTangentLineCheckBox(boolean tangentLineCheckBox) {
@@ -242,8 +266,8 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         this.perpendicularCheckBox = perpendicularCheckBox;
     }
 
-    public Point2D getBasisAuxiliaryLinesPoint() {
-        return basisAuxiliaryLinesPoint;
+    public Point2D getAuxiliaryPoint() {
+        return auxiliaryPoint;
     }
 
     public boolean isTangentLineCheckBox() {

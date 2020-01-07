@@ -27,7 +27,7 @@ public class AuxiliaryLinesForm {
     public AuxiliaryLinesForm(GUIForm parent) {
         this.parent = parent;
         drawingPanel = (DrawingPanel) parent.getDrawingPanel();
-        point2D = drawingPanel.getBasisAuxiliaryLinesPoint();
+        point2D = drawingPanel.getAuxiliaryPoint();
         if (point2D != null) {
             X.setText(String.valueOf(point2D.getX()));
             Y.setText(String.valueOf(point2D.getY()));
@@ -62,7 +62,7 @@ public class AuxiliaryLinesForm {
                 X.setText("");
                 Y.setText("");
             }
-            drawingPanel.setBasisAuxiliaryLinesPoint(figurePoint);
+            drawingPanel.setAuxiliaryPoint(figurePoint);
             parent.repaintFigure();
         }
 

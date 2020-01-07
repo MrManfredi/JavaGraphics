@@ -18,4 +18,12 @@ public abstract class Utils {
         }
         return circlePoints;
     }
+
+    public static double calculateX(Point2D point, Point2D vector, double y) {
+        return (vector.getX() * (y - point.getY())) / vector.getY() + point.getX();
+    }
+
+    public static double calculateY(Point2D point, Point2D vector, double x) {
+        return (vector.getY() * (x - point.getX())) / vector.getX() + point.getY();
+    }
 }
