@@ -23,6 +23,8 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     private boolean tangentLineCheckBox = false;
     private boolean perpendicularCheckBox = false;
 
+    private double transformFactor = 0.0;
+
     public DrawingPanel(Figure figure) {
         this.figure = figure;
     }
@@ -31,7 +33,6 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
-        drawBackground(graphics2D);
         if (isGridVisible) {
             drawGrid(graphics2D);
         }
@@ -125,11 +126,6 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         return new Point2D.Double(x2, y2);
     }
 
-    private void drawBackground(Graphics2D g) {
-        g.setColor(Color.WHITE);
-        g.fillRect(getFullPadding(), getFullPadding(), getWorkspaceWidth(), getWorkspaceHeight());
-    }
-
     private void drawGrid(Graphics2D g) {
         g.setStroke(new BasicStroke(1));
         g.setPaint(Color.GRAY);
@@ -138,12 +134,20 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
 
         // parallel to the X axis
         for (int y = fullPadding; y <= fullPadding + getWorkspaceHeight(); y+= cellSize) {
-            g.drawLine(fullPadding, y, fullPadding + getWorkspaceWidth(), y);
+            g.draw(new Line2D.Double(
+                    (y - fullPadding) * transformFactor + fullPadding,
+                    y,
+                    (y - fullPadding) * transformFactor + fullPadding + getWorkspaceWidth(),
+                    y));
         }
 
         // parallel to the Y axis
         for (int x = fullPadding; x <= fullPadding + getWorkspaceWidth(); x+= cellSize) {
-            g.drawLine(x, fullPadding, x, fullPadding + getWorkspaceHeight());
+            g.draw(new Line2D.Double(
+                    x,
+                    fullPadding,
+                    x + transformFactor * getWorkspaceHeight(),
+                    fullPadding + getWorkspaceHeight()));
         }
     }
 
@@ -166,7 +170,11 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
 
         // axis
         g.drawLine(fullPadding, fullPadding - 1, fullPadding + getWorkspaceWidth(), fullPadding - 1);      // X
-        g.drawLine(fullPadding - 1, fullPadding, fullPadding - 1, fullPadding + getWorkspaceHeight());     // Y
+        g.draw(new Line2D.Double(
+                fullPadding - 1,
+                fullPadding,
+                getWorkspaceHeight() * transformFactor + fullPadding - 1,
+                fullPadding + getWorkspaceHeight()));     // Y
 
         int serifLength = 5;
         int indentationFromSerif = 2;
@@ -178,7 +186,11 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
 
         // serifs on the Y axis
         for (int y = fullPadding; y <= fullPadding + getWorkspaceHeight(); y+= axisSegmentSize) {
-            g.drawLine(fullPadding, y, fullPadding - serifLength, y);
+            g.draw(new Line2D.Double(
+                    (y - fullPadding) * transformFactor + fullPadding ,
+                    y,
+                    (y - fullPadding) * transformFactor + fullPadding - serifLength,
+                    y));
         }
 
         // numbering
@@ -198,7 +210,9 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         for (int y = fullPadding + axisSegmentSize; y <= fullPadding + getWorkspaceHeight() - axisSegmentSize; y+= axisSegmentSize) {
             String label = String.valueOf(y - fullPadding);
             int labelWidth = metrics.stringWidth(label);
-            g.drawString(label, fullPadding - labelWidth - serifLength - indentationFromSerif, y); //  + g.getFont().getSize() / 2);
+            g.drawString(label,
+                    (y - (float)fullPadding) * (float)transformFactor + fullPadding - labelWidth - serifLength - indentationFromSerif,
+                    y); //  + g.getFont().getSize() / 2);
         }
 
         // axis name X
@@ -210,7 +224,7 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         // axis name Y
         int axisNameYWidth = metrics.stringWidth(axisNameY);
         g.drawString(axisNameY,
-                fullPadding - axisNameYWidth - serifLength - indentationFromSerif,
+                (float) getWorkspaceHeight() * (float) transformFactor + fullPadding - axisNameYWidth - serifLength - indentationFromSerif,
                 fullPadding + getWorkspaceHeight() - (getWorkspaceHeight() % axisSegmentSize));
 
 //        // x arrow
@@ -298,5 +312,9 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
 
     public boolean isPerpendicularCheckBox() {
         return perpendicularCheckBox;
+    }
+
+    public void changeTransformFactor(double transformFactor) {
+        this.transformFactor += transformFactor;
     }
 }

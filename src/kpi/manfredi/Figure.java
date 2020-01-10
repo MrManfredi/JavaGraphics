@@ -45,6 +45,8 @@ public class Figure implements IFigure{
     private List<Point2D> contour3;
     private List<List<Point2D>> contours;
 
+    private double transformFactor = 0.0;
+
     public Figure() {
         x = 0.0;
         y = 0.0;
@@ -307,5 +309,18 @@ public class Figure implements IFigure{
             }
         }
         return null;
+    }
+
+    public void transform(double transformFactor) {
+        for (List<Point2D> contour : contours) {
+            for (Point2D point : contour) {
+                double x = point.getX();
+                double y = point.getY();
+
+                double newX = x + transformFactor * y;
+
+                point.setLocation(newX, y);
+            }
+        }
     }
 }
