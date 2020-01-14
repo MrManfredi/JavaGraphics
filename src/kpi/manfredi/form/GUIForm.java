@@ -150,14 +150,26 @@ public class GUIForm {
             frame.setAlwaysOnTop(true);
         });
 
-        JMenuItem transformMI = new JMenuItem("Transform");
-        actionsMenu.add(transformMI);
-        transformMI.addActionListener(e -> {
-            JFrame frame = new JFrame("Transform");
-            TransformForm transformForm = new TransformForm(this);
-            frame.setContentPane(transformForm.getContent());
+        JMenuItem afinneTransformMI = new JMenuItem("Afinne Transform");
+        actionsMenu.add(afinneTransformMI);
+        afinneTransformMI.addActionListener(e -> {
+            JFrame frame = new JFrame("Afinne Transform");
+            AfinneTransformForm afinneTransformForm = new AfinneTransformForm(this);
+            frame.setContentPane(afinneTransformForm.getContent());
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            frame.setMinimumSize(new Dimension(250, 100));
+            frame.setMinimumSize(new Dimension(400, 300));
+            frame.setVisible(true);
+            frame.setAlwaysOnTop(true);
+        });
+
+        JMenuItem projectiveTransformMI = new JMenuItem("Projective Transform");
+        actionsMenu.add(projectiveTransformMI);
+        projectiveTransformMI.addActionListener(e -> {
+            JFrame frame = new JFrame("Projective Transform");
+            ProjectiveTransformForm projectiveTransformForm = new ProjectiveTransformForm(this);
+            frame.setContentPane(projectiveTransformForm.getContent());
+            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            frame.setMinimumSize(new Dimension(500, 300));
             frame.setVisible(true);
             frame.setAlwaysOnTop(true);
         });

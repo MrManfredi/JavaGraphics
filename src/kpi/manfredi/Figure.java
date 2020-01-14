@@ -311,15 +311,28 @@ public class Figure implements IFigure{
         return null;
     }
 
-    public void transform(double transformFactor) {
+    public void afinneTransform(double Xx, double Xy, double Yx, double Yy, double Ox, double Oy) {
         for (List<Point2D> contour : contours) {
             for (Point2D point : contour) {
                 double x = point.getX();
                 double y = point.getY();
 
-                double newX = x + transformFactor * y;
+                double newX = Xx * x + Yx * y + Ox;
+                double newY = Xy * x + Yy * y + Oy;
+                point.setLocation(newX, newY);
+            }
+        }
+    }
 
-                point.setLocation(newX, y);
+    public void projectiveTransform(double Xx, double Xy, double Yx, double Yy, double Ox, double Oy, double Wx, double Wy, double Wo) {
+        for (List<Point2D> contour : contours) {
+            for (Point2D point : contour) {
+                double x = point.getX();
+                double y = point.getY();
+
+                double newX = (Xx * Wx * x + Yx * Wy * y + Ox * Wo) / (Wx * x + Wy * y + Wo);
+                double newY = (Xy * Wx * x + Yy * Wy * y + Oy * Wo) / (Wx * x + Wy * y + Wo);
+                point.setLocation(newX, newY);
             }
         }
     }
