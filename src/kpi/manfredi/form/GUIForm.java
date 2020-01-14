@@ -169,7 +169,7 @@ public class GUIForm {
             ProjectiveTransformForm projectiveTransformForm = new ProjectiveTransformForm(this);
             frame.setContentPane(projectiveTransformForm.getContent());
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            frame.setMinimumSize(new Dimension(500, 300));
+            frame.setMinimumSize(new Dimension(600, 300));
             frame.setVisible(true);
             frame.setAlwaysOnTop(true);
         });

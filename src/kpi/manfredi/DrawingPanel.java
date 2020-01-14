@@ -1,5 +1,8 @@
 package kpi.manfredi;
 
+import kpi.manfredi.form.AfinneDTO;
+import kpi.manfredi.form.ProjectiveDTO;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -24,6 +27,8 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     private boolean perpendicularCheckBox = false;
 
     private double transformFactor = 0.0;
+    private AfinneDTO afinneDTO;
+    private ProjectiveDTO projectiveDTO;
 
     public DrawingPanel(Figure figure) {
         this.figure = figure;
@@ -134,20 +139,16 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
 
         // parallel to the X axis
         for (int y = fullPadding; y <= fullPadding + getWorkspaceHeight(); y+= cellSize) {
-            g.draw(new Line2D.Double(
-                    (y - fullPadding) * transformFactor + fullPadding,
-                    y,
-                    (y - fullPadding) * transformFactor + fullPadding + getWorkspaceWidth(),
-                    y));
+            Point2D temp1 = new Point2D.Double((y - fullPadding) * transformFactor + fullPadding, y);
+            Point2D temp2 = new Point2D.Double(((y - fullPadding) * transformFactor + fullPadding + getWorkspaceWidth()), y);
+            g.draw(getTransformedLine(temp1, temp2));
         }
 
         // parallel to the Y axis
         for (int x = fullPadding; x <= fullPadding + getWorkspaceWidth(); x+= cellSize) {
-            g.draw(new Line2D.Double(
-                    x,
-                    fullPadding,
-                    x + transformFactor * getWorkspaceHeight(),
-                    fullPadding + getWorkspaceHeight()));
+            Point2D temp1 = new Point2D.Double(x, fullPadding);
+            Point2D temp2 = new Point2D.Double(x + transformFactor * getWorkspaceHeight(),fullPadding + getWorkspaceHeight());
+            g.draw(getTransformedLine(temp1, temp2));
         }
     }
 
@@ -169,63 +170,66 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         int fullPadding = getFullPadding();
 
         // axis
-        g.drawLine(fullPadding, fullPadding - 1, fullPadding + getWorkspaceWidth(), fullPadding - 1);      // X
-        g.draw(new Line2D.Double(
-                fullPadding - 1,
-                fullPadding,
-                getWorkspaceHeight() * transformFactor + fullPadding - 1,
-                fullPadding + getWorkspaceHeight()));     // Y
+        g.draw(getTransformedLine(
+                new Point2D.Double(fullPadding, fullPadding - 1),
+                new Point2D.Double(fullPadding + getWorkspaceWidth(), fullPadding - 1)));      // X
+        g.draw(getTransformedLine(
+                new Point2D.Double(fullPadding - 1, fullPadding),
+                new Point2D.Double(
+                        getWorkspaceHeight() * transformFactor + fullPadding - 1,
+                        fullPadding + getWorkspaceHeight())));     // Y
 
         int serifLength = 5;
         int indentationFromSerif = 2;
 
         // serifs on the X axis
         for (int x = fullPadding; x <= fullPadding + getWorkspaceWidth(); x+= axisSegmentSize) {
-            g.drawLine(x, fullPadding, x, fullPadding - serifLength);
+            g.draw(getTransformedLine(new Point2D.Double(x, fullPadding), new Point2D.Double(x, fullPadding - serifLength)));
         }
 
         // serifs on the Y axis
         for (int y = fullPadding; y <= fullPadding + getWorkspaceHeight(); y+= axisSegmentSize) {
-            g.draw(new Line2D.Double(
-                    (y - fullPadding) * transformFactor + fullPadding ,
-                    y,
-                    (y - fullPadding) * transformFactor + fullPadding - serifLength,
-                    y));
+            g.draw(getTransformedLine(
+                    new Point2D.Double((y - fullPadding) * transformFactor + fullPadding , y),
+                    new Point2D.Double((y - fullPadding) * transformFactor + fullPadding - serifLength, y)));
         }
 
         // numbering
         FontMetrics metrics = g.getFontMetrics();
         String origin = "O";
         int originWidth = metrics.stringWidth(origin);
-        g.drawString(origin, fullPadding - serifLength - originWidth, fullPadding - serifLength); // O
+        Point2D O = getTransformedDot(new Point2D.Double(fullPadding - serifLength - originWidth, fullPadding - serifLength));
+        g.drawString(origin, (float) O.getX(), (float) O.getY()); // O
 
         // dimensions on the X axis
         for (int x = fullPadding + axisSegmentSize; x <= fullPadding + getWorkspaceWidth() - axisSegmentSize; x+= axisSegmentSize) {
             String label = String.valueOf(x - fullPadding);
             int labelWidth = metrics.stringWidth(label);
-            g.drawString(label , x - labelWidth / 2, fullPadding - serifLength - indentationFromSerif);
+            Point2D temp = getTransformedDot(new Point2D.Double(x - labelWidth / 2.0, fullPadding - serifLength - indentationFromSerif));
+            g.drawString(label , (float) temp.getX(), (float) temp.getY());
         }
 
         // dimensions on the Y axis
         for (int y = fullPadding + axisSegmentSize; y <= fullPadding + getWorkspaceHeight() - axisSegmentSize; y+= axisSegmentSize) {
             String label = String.valueOf(y - fullPadding);
             int labelWidth = metrics.stringWidth(label);
-            g.drawString(label,
-                    (y - (float)fullPadding) * (float)transformFactor + fullPadding - labelWidth - serifLength - indentationFromSerif,
-                    y); //  + g.getFont().getSize() / 2);
+            Point2D temp = getTransformedDot(new Point2D.Double((y - fullPadding) * transformFactor + fullPadding - labelWidth - serifLength - indentationFromSerif, y));
+            g.drawString(label , (float) temp.getX(), (float) temp.getY()); //  + g.getFont().getSize() / 2);
         }
 
         // axis name X
         int axisNameXWidth = metrics.stringWidth(axisNameX);
-        g.drawString(axisNameX ,
+        Point2D X = getTransformedDot(new Point2D.Double(
                 fullPadding + getWorkspaceWidth() - (getWorkspaceWidth() % axisSegmentSize) - axisNameXWidth / 2,
-                fullPadding - serifLength - indentationFromSerif);
+                fullPadding - serifLength - indentationFromSerif));
+        g.drawString(axisNameX , (float) X.getX(), (float) X.getY());
 
         // axis name Y
         int axisNameYWidth = metrics.stringWidth(axisNameY);
-        g.drawString(axisNameY,
+        Point2D Y = getTransformedDot(new Point2D.Double(
                 (float) getWorkspaceHeight() * (float) transformFactor + fullPadding - axisNameYWidth - serifLength - indentationFromSerif,
-                fullPadding + getWorkspaceHeight() - (getWorkspaceHeight() % axisSegmentSize));
+                fullPadding + getWorkspaceHeight() - (getWorkspaceHeight() % axisSegmentSize)));
+        g.drawString(axisNameY,  (float) Y.getX(), (float) Y.getY());
 
 //        // x arrow
 //        g.drawLine(getWidth(), cellSize, getWidth() - cellSize / 2, (int) (cellSize * 0.66));
@@ -244,6 +248,12 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         Queue<Point2D> pointsQueue = new LinkedBlockingQueue<>();
         for (Point2D point2D : contour) {
             Point2D temp = new Point2D.Double(point2D.getX() + getFullPadding(), point2D.getY() + getFullPadding());
+            if (afinneDTO != null) {
+                temp = Utils.afinneTransform(temp, afinneDTO);
+            }
+            if (projectiveDTO != null) {
+                temp = Utils.projectiveTransform(temp, projectiveDTO);
+            }
             pointsQueue.add(temp);
         }
 
@@ -316,5 +326,35 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
 
     public void changeTransformFactor(double transformFactor) {
         this.transformFactor += transformFactor;
+    }
+
+    public void setAfinneDTO(AfinneDTO afinneDTO) {
+        this.afinneDTO = afinneDTO;
+    }
+
+    public void setProjectiveDTO(ProjectiveDTO projectiveDTO) {
+        this.projectiveDTO = projectiveDTO;
+    }
+
+    private Point2D getTransformedDot(Point2D temp) {
+        if (afinneDTO != null) {
+            temp = Utils.afinneTransform(temp, afinneDTO);
+        }
+        if (projectiveDTO != null) {
+            temp = Utils.projectiveTransform(temp, projectiveDTO);
+        }
+        return temp;
+    }
+
+    private Line2D getTransformedLine(Point2D temp1, Point2D temp2) {
+        if (afinneDTO != null) {
+            temp1 = Utils.afinneTransform(temp1, afinneDTO);
+            temp2 = Utils.afinneTransform(temp2, afinneDTO);
+        }
+        if (projectiveDTO != null) {
+            temp1 = Utils.projectiveTransform(temp1, projectiveDTO);
+            temp2 = Utils.projectiveTransform(temp2, projectiveDTO);
+        }
+        return new Line2D.Double(temp1, temp2);
     }
 }

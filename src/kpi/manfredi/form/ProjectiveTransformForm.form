@@ -36,7 +36,7 @@
           </component>
           <component id="658dc" class="javax.swing.JButton" binding="transformButton" default-binding="true">
             <constraints>
-              <grid row="4" column="0" row-span="1" col-span="6" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Transform"/>
@@ -192,6 +192,14 @@
             </constraints>
             <properties>
               <text value="2"/>
+            </properties>
+          </component>
+          <component id="25092" class="javax.swing.JButton" binding="undoButton" default-binding="true">
+            <constraints>
+              <grid row="4" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Undo"/>
             </properties>
           </component>
         </children>

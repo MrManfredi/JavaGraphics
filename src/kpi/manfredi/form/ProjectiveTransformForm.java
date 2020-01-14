@@ -20,6 +20,7 @@ public class ProjectiveTransformForm {
     private JTextField wo;
 
     private JButton transformButton;
+    private JButton undoButton;
 
     public JPanel getContent() {
         return content;
@@ -29,8 +30,7 @@ public class ProjectiveTransformForm {
         transformButton.addActionListener(e -> {
             try {
                 DrawingPanel drawingPanel = (DrawingPanel) parent.getDrawingPanel();
-
-                parent.getFigure().projectiveTransform(
+                ProjectiveDTO projectiveDTO = new ProjectiveDTO(
                         Double.parseDouble(this.xx.getText()),
                         Double.parseDouble(this.xy.getText()),
                         Double.parseDouble(this.yx.getText()),
@@ -41,11 +41,18 @@ public class ProjectiveTransformForm {
                         Double.parseDouble(this.wy.getText()),
                         Double.parseDouble(this.wo.getText())
                 );
+                drawingPanel.setProjectiveDTO(projectiveDTO);
                 parent.updateMeasurements();
                 parent.repaintFigure();
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this.content, "Wrong input format.");
             }
+        });
+        undoButton.addActionListener(e -> {
+            DrawingPanel drawingPanel = (DrawingPanel) parent.getDrawingPanel();
+            drawingPanel.setProjectiveDTO(null);
+            parent.updateMeasurements();
+            parent.repaintFigure();
         });
     }
 }
