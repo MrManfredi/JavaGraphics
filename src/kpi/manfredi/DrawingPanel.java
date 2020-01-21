@@ -12,7 +12,7 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class DrawingPanel extends JPanel implements IDrawingPanel{
-    private Figure figure;
+    private IFigure figure;
 
     private String axisNameX = "X";
     private String axisNameY = "Y";
@@ -30,7 +30,7 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     private AfinneDTO afinneDTO;
     private ProjectiveDTO projectiveDTO;
 
-    public DrawingPanel(Figure figure) {
+    public DrawingPanel(IFigure figure) {
         this.figure = figure;
     }
 
@@ -38,10 +38,17 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D graphics2D = (Graphics2D) g;
-        if (isGridVisible) {
-            drawGrid(graphics2D);
+
+        if (figure instanceof LemniscateOfBernoulli) {
+            padding = 300;
+            drawPolarAxis(graphics2D);
+        } else {
+            padding = 40;
+            if (isGridVisible) {
+                drawGrid(graphics2D);
+            }
+            drawAxis(graphics2D);
         }
-        drawAxis(graphics2D);
         drawFigure(graphics2D);
         if (auxiliaryPoint != null) {
             if (tangentLineCheckBox) {
@@ -51,6 +58,13 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
                 drawPerpendicular(graphics2D);
             }
         }
+    }
+
+    private void drawPolarAxis(Graphics2D g) {
+        g.setStroke(new BasicStroke(3));
+        g.setColor(Color.BLACK);
+        int fullPadding = getFullPadding();
+        g.draw(new Line2D.Double(new Point2D.Double(fullPadding, fullPadding), new Point2D.Double(getWidth(), fullPadding)));
     }
 
     private void drawTangentLine(Graphics2D g) {
@@ -270,7 +284,7 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         return padding + labelPadding;
     }
 
-    public void setFigure(Figure figure) {
+    public void setFigure(IFigure figure) {
         this.figure = figure;
     }
 

@@ -1,7 +1,7 @@
 package kpi.manfredi.form;
 
 import kpi.manfredi.DrawingPanel;
-import kpi.manfredi.Figure;
+import kpi.manfredi.IFigure;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
@@ -53,8 +53,8 @@ public class AuxiliaryLinesForm {
         public void mouseClicked(MouseEvent e) {
             Point point = e.getPoint();
             point2D = new Point2D.Double(point.getX() - fullPadding, point.getY() - fullPadding);
-            Figure figure = parent.getFigure();
-            Point2D figurePoint = figure.getPoint(point2D);
+            IFigure figure = parent.getFigure();
+            Point2D figurePoint = figure.getPointInTheVicinity(point2D);
             if (figurePoint != null) {
                 X.setText(String.valueOf(figurePoint.getX()));
                 Y.setText(String.valueOf(figurePoint.getY()));

@@ -1,13 +1,15 @@
 package kpi.manfredi.form;
 
 import kpi.manfredi.DrawingPanel;
-import kpi.manfredi.Figure;
+import kpi.manfredi.Draft;
+import kpi.manfredi.IFigure;
+import kpi.manfredi.LemniscateOfBernoulli;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GUIForm {
-    private volatile Figure figure;
+    private volatile IFigure figure;
 //    private Dimension DRAWING_PANEL_DIMENSION = new Dimension(600, 600);
 
     private JPanel windowPanel;
@@ -37,13 +39,18 @@ public class GUIForm {
         return drawingPanel;
     }
 
-    public Figure getFigure() {
+    public IFigure getFigure() {
         return figure;
     }
 
-    public GUIForm(Figure figure) {
+    public void setFigure(IFigure figure) {
         this.figure = figure;
-        setMeasurements();
+        ((DrawingPanel)drawingPanel).setFigure(figure);
+    }
+
+    public GUIForm(IFigure figure) {
+        this.figure = figure;
+        if (figure instanceof Draft) setMeasurements();
         drawButton.addActionListener(e -> {
             setMeasurements();
             repaintFigure();
@@ -57,37 +64,38 @@ public class GUIForm {
 
     private void setMeasurements() {
         try {
-            figure.setW1(Double.parseDouble(W1TextField.getText()));
-            figure.setW2(Double.parseDouble(W2TextField.getText()));
-            figure.setH1(Double.parseDouble(H1TextField.getText()));
-            figure.setH2(Double.parseDouble(H2TextField.getText()));
-            figure.setH3(Double.parseDouble(H3TextField.getText()));
-            figure.setH4(Double.parseDouble(H4TextField.getText()));
-            figure.setH5(Double.parseDouble(H5TextField.getText()));
-            figure.setD1(Double.parseDouble(D1TextField.getText()));
-            figure.setR1(Double.parseDouble(R1TextField.getText()));
-            figure.setR2(Double.parseDouble(R2TextField.getText()));
+            ((Draft)figure).setW1(Double.parseDouble(W1TextField.getText()));
+            ((Draft)figure).setW2(Double.parseDouble(W2TextField.getText()));
+            ((Draft)figure).setH1(Double.parseDouble(H1TextField.getText()));
+            ((Draft)figure).setH2(Double.parseDouble(H2TextField.getText()));
+            ((Draft)figure).setH3(Double.parseDouble(H3TextField.getText()));
+            ((Draft)figure).setH4(Double.parseDouble(H4TextField.getText()));
+            ((Draft)figure).setH5(Double.parseDouble(H5TextField.getText()));
+            ((Draft)figure).setD1(Double.parseDouble(D1TextField.getText()));
+            ((Draft)figure).setR1(Double.parseDouble(R1TextField.getText()));
+            ((Draft)figure).setR2(Double.parseDouble(R2TextField.getText()));
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(null, "You must to enter only the numbers!");
         }
     }
 
     public void updateMeasurements() {
-        W1TextField.setText(String.valueOf(figure.getW1()));
-        W2TextField.setText(String.valueOf(figure.getW2()));
-        H1TextField.setText(String.valueOf(figure.getH1()));
-        H2TextField.setText(String.valueOf(figure.getH2()));
-        H3TextField.setText(String.valueOf(figure.getH3()));
-        H4TextField.setText(String.valueOf(figure.getH4()));
-        H5TextField.setText(String.valueOf(figure.getH5()));
-        D1TextField.setText(String.valueOf(figure.getD1()));
-        R1TextField.setText(String.valueOf(figure.getR1()));
-        R2TextField.setText(String.valueOf(figure.getR2()));
+        W1TextField.setText(String.valueOf(((Draft)figure).getW1()));
+        W2TextField.setText(String.valueOf(((Draft)figure).getW2()));
+        H1TextField.setText(String.valueOf(((Draft)figure).getH1()));
+        H2TextField.setText(String.valueOf(((Draft)figure).getH2()));
+        H3TextField.setText(String.valueOf(((Draft)figure).getH3()));
+        H4TextField.setText(String.valueOf(((Draft)figure).getH4()));
+        H5TextField.setText(String.valueOf(((Draft)figure).getH5()));
+        D1TextField.setText(String.valueOf(((Draft)figure).getD1()));
+        R1TextField.setText(String.valueOf(((Draft)figure).getR1()));
+        R2TextField.setText(String.valueOf(((Draft)figure).getR2()));
     }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Nazarchuk D.K.");
-        Figure figure = new Figure();
+
+        IFigure figure = new Draft();   // new LemniscateOfBernoulli(100);
         GUIForm guiForm = new GUIForm(figure);
         frame.setContentPane(guiForm.getWindowPanel());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -170,6 +178,18 @@ public class GUIForm {
             frame.setContentPane(projectiveTransformForm.getContent());
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             frame.setMinimumSize(new Dimension(600, 300));
+            frame.setVisible(true);
+            frame.setAlwaysOnTop(true);
+        });
+
+        JMenuItem curveMI = new JMenuItem("Lemniscate of Bernoulli");
+        actionsMenu.add(curveMI);
+        curveMI.addActionListener(e -> {
+            JFrame frame = new JFrame("Lemniscate of Bernoulli");
+            CurveForm curveForm = new CurveForm(this);
+            frame.setContentPane(curveForm.getContent());
+            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            frame.setMinimumSize(new Dimension(250, 100));
             frame.setVisible(true);
             frame.setAlwaysOnTop(true);
         });

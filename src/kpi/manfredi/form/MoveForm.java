@@ -1,6 +1,6 @@
 package kpi.manfredi.form;
 
-import kpi.manfredi.Figure;
+import kpi.manfredi.IFigure;
 
 import javax.swing.*;
 
@@ -13,7 +13,7 @@ public class MoveForm {
     private JPanel content;
 
     public MoveForm(GUIForm parent) {
-        Figure figure = parent.getFigure();
+        IFigure figure = parent.getFigure();
 
         moveUpButton.addActionListener(e -> {
             figure.moveUp(Integer.parseInt(moveAmountField.getText()));
