@@ -44,7 +44,7 @@ public class LemniscateOfBernoulli extends Figure implements IFigure{
     private void calculatePoints(List<Point2D> contour, double from, double to) { // ro^2 = 2 * halfDistance^2 * cos(2 * phi)
         double ro;
         double roSq;
-        for (double phi = from; phi <= to; phi += 0.05) {
+        for (double phi = from; phi <= to; phi += 0.0125) {
             roSq = 2 * halfDistance * halfDistance * Math.cos(2 * phi);
             if (roSq < 0) continue;
             ro = Math.sqrt(roSq);

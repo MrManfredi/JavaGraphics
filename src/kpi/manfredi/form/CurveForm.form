@@ -23,7 +23,7 @@
           </grid>
         </constraints>
         <properties>
-          <text value="200"/>
+          <text value="300"/>
         </properties>
       </component>
       <component id="efe23" class="javax.swing.JButton" binding="drawButton" default-binding="true">

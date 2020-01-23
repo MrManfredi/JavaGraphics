@@ -95,7 +95,7 @@ public class GUIForm {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Nazarchuk D.K.");
 
-        IFigure figure = new Draft();   // new LemniscateOfBernoulli(100);
+        IFigure figure = new Draft();   // new LemniscateOfBernoulli(150);
         GUIForm guiForm = new GUIForm(figure);
         frame.setContentPane(guiForm.getWindowPanel());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

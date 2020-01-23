@@ -23,8 +23,8 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     private boolean isGridVisible = false;
 
     private Point2D auxiliaryPoint = null;
-    private boolean tangentLineCheckBox = false;
-    private boolean perpendicularCheckBox = false;
+    private boolean tangentLineCheckBox = true;
+    private boolean perpendicularCheckBox = true;
 
     private double transformFactor = 0.0;
     private AfinneDTO afinneDTO;
@@ -91,7 +91,6 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     }
 
     private void drawTangentLine(Graphics2D g) {
-        g.setColor(Color.BLUE);
         Point2D nextPoint = figure.getNextPoint(auxiliaryPoint);
         if (nextPoint == null) {
             System.out.println("nextPoint is null");
@@ -101,7 +100,26 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         Point2D vector = new Point2D.Double(
                 nextPoint.getX() - auxiliaryPoint.getX(),
                 nextPoint.getY() - auxiliaryPoint.getY());
-        drawLineByVector(g, vector);
+        if (figure instanceof LemniscateOfBernoulli) {
+            drawPolarLineByVector(g, vector);
+        } else {
+            drawLineByVector(g, vector);
+        }
+    }
+
+    private void drawPolarLineByVector(Graphics2D g, Point2D vector) {
+        Point2D startPoint, endPoint;
+        if (Math.abs(vector.getX()) < Math.abs(vector.getY())) {
+            startPoint = getPointByY(-getFullPadding(), vector);
+            endPoint = getPointByY(getHeight() - getFullPadding(), vector);
+        } else {
+            startPoint = getPointByX(-getFullPadding(), vector);
+            endPoint = getPointByX(getWidth() - getFullPadding(), vector);
+        }
+
+        g.setColor(Color.BLUE);
+        g.setStroke(new BasicStroke(3));
+        g.draw(new Line2D.Double(startPoint, endPoint));
     }
 
     private void drawLineByVector(Graphics2D g, Point2D vector) {
@@ -117,6 +135,8 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         startPoint = adaptPoint(startPoint, vector);
         endPoint = adaptPoint(endPoint, vector);
 
+        g.setColor(Color.BLUE);
+        g.setStroke(new BasicStroke(3));
         g.draw(new Line2D.Double(startPoint, endPoint));
     }
 
@@ -146,7 +166,6 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     }
 
     private void drawPerpendicular(Graphics2D g) {
-        g.setColor(Color.BLUE);
         Point2D nextPoint = figure.getNextPoint(auxiliaryPoint);
         if (nextPoint == null) {
             System.out.println("nextPoint is null");
@@ -157,7 +176,12 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
         Point2D vector = new Point2D.Double(
                 anotherPoint.getX() - auxiliaryPoint.getX(),
                 anotherPoint.getY() - auxiliaryPoint.getY());
-        drawLineByVector(g, vector);
+
+        if (figure instanceof LemniscateOfBernoulli) {
+            drawPolarLineByVector(g, vector);
+        } else {
+            drawLineByVector(g, vector);
+        }
     }
 
     private Point2D getPerpendicularBasePoint(Point2D basePoint, Point2D point1) {
