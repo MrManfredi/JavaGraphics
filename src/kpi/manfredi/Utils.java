@@ -45,4 +45,10 @@ public abstract class Utils {
         double newY = (dto.getXy() * dto.getWx() * x + dto.getYy() * dto.getWy() * y + dto.getOy() * dto.getWo()) / (dto.getWx() * x + dto.getWy() * y + dto.getWo());
         return new Point2D.Double(newX, newY);
     }
+
+    public static double calculateDistance(Point2D point1, Point2D point2) {
+        double x = point2.getX() - point1.getX();
+        double y = point2.getY() - point1.getY();
+        return Math.sqrt(x * x + y * y);
+    }
 }

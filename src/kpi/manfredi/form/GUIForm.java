@@ -189,7 +189,7 @@ public class GUIForm {
             CurveForm curveForm = new CurveForm(this);
             frame.setContentPane(curveForm.getContent());
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            frame.setMinimumSize(new Dimension(250, 100));
+            frame.setMinimumSize(new Dimension(400, 150));
             frame.setVisible(true);
             frame.setAlwaysOnTop(true);
         });

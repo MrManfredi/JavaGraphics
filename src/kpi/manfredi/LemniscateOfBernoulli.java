@@ -6,10 +6,27 @@ import java.util.List;
 
 public class LemniscateOfBernoulli extends Figure implements IFigure{
     private double halfDistance;
+    private double length;
 
     public LemniscateOfBernoulli(double halfDistance) {
         this.halfDistance = halfDistance;
         contours = calculateContours();
+        length = calculateLength();
+    }
+
+    private double calculateLength() {
+        double result = 0.0;
+        for (List<Point2D> contour : contours) {
+            Point2D prevPoint = null;
+            for (Point2D point : contour) {
+                if (prevPoint != null) {
+                    result += Utils.calculateDistance(prevPoint, point);
+                }
+                prevPoint = point;
+            }
+            result += Utils.calculateDistance(prevPoint, contour.get(0));
+        }
+        return result;
     }
 
     private List<List<Point2D>> calculateContours() {
@@ -24,7 +41,7 @@ public class LemniscateOfBernoulli extends Figure implements IFigure{
         return contours;
     }
 
-    private void calculatePoints(List<Point2D> contour, double from, double to) {
+    private void calculatePoints(List<Point2D> contour, double from, double to) { // ro^2 = 2 * halfDistance^2 * cos(2 * phi)
         double ro;
         double roSq;
         for (double phi = from; phi <= to; phi += 0.05) {
@@ -33,5 +50,9 @@ public class LemniscateOfBernoulli extends Figure implements IFigure{
             ro = Math.sqrt(roSq);
             contour.add(new Point2D.Double(ro * Math.cos(phi), ro * Math.sin(phi)));
         }
+    }
+
+    public double getLength() {
+        return length;
     }
 }

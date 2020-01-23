@@ -61,10 +61,33 @@ public class DrawingPanel extends JPanel implements IDrawingPanel{
     }
 
     private void drawPolarAxis(Graphics2D g) {
-        g.setStroke(new BasicStroke(3));
+        g.setStroke(new BasicStroke(1));
         g.setColor(Color.BLACK);
         int fullPadding = getFullPadding();
-        g.draw(new Line2D.Double(new Point2D.Double(fullPadding, fullPadding), new Point2D.Double(getWidth(), fullPadding)));
+//        g.draw(new Line2D.Double(new Point2D.Double(fullPadding, fullPadding), new Point2D.Double(getWidth(), fullPadding)));
+        g.draw(getTransformedLine(
+                new Point2D.Double(fullPadding, fullPadding - 1),
+                new Point2D.Double(getWidth(), fullPadding - 1)));
+
+        int serifLength = 5;
+        for (int x = fullPadding; x <= getWidth(); x+= axisSegmentSize) {
+            g.draw(getTransformedLine(new Point2D.Double(x, fullPadding), new Point2D.Double(x, fullPadding - serifLength)));
+        }
+
+
+        FontMetrics metrics = g.getFontMetrics();
+        String origin = "O";
+        Point2D O = getTransformedDot(new Point2D.Double(fullPadding - serifLength, fullPadding - serifLength));
+        g.drawString(origin, (float) O.getX(), (float) O.getY()); // O
+
+        for (int x = fullPadding + axisSegmentSize; x <= getWidth(); x+= axisSegmentSize) {
+            String label = String.valueOf(x - fullPadding);
+
+            int indentationFromSerif = 2;
+            int labelWidth = metrics.stringWidth(label);
+            Point2D temp = getTransformedDot(new Point2D.Double(x - labelWidth / 2.0, fullPadding - serifLength - indentationFromSerif));
+            g.drawString(label , (float) temp.getX(), (float) temp.getY());
+        }
     }
 
     private void drawTangentLine(Graphics2D g) {
